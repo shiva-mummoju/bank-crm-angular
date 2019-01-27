@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthDetailsService } from './../auth-details.service';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +12,15 @@ export class HeaderComponent implements OnInit {
   opened: boolean = true;
   shouldRun = true;
 
-  constructor() { }
+  constructor(public auth : AuthDetailsService) { }
 
 
 
   ngOnInit() {
+  }
+
+  goToLogin(){
+    this.auth.goToLogin();
   }
 
 }

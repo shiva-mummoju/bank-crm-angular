@@ -1,0 +1,40 @@
+<mat-toolbar>
+  <span>LOGIN</span>
+</mat-toolbar>
+<mat-card class="my-card">
+  <mat-card-content>
+    <form class="my-form" #loginForm="ngForm">
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Email" id="email" #email="ngModel" [(ngModel)]="emailValue" name="email" required
+          email>
+      </mat-form-field>
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+        <div *ngIf="email.errors.required">
+          Email is required.
+        </div>
+        <div *ngIf="email.errors.email && email.touched">
+          Invalid Email
+        </div>
+      </div><br>
+      <mat-form-field class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" placeholder="Password" [(ngModel)]="passwordValue" #password="ngModel" name="password"
+          required password>
+      </mat-form-field>
+      <div *ngIf="password.invalid && (email.dirty || password.touched)" class="alert alert-danger">
+        <div *ngIf="password.errors.required">
+          Password is required.
+        </div>
+      </div><br>
+      <br>
+      <button mat-raised-button (click)="login()" [disabled]="loginForm.invalid" color="primary">LOGIN</button><br /><br>
+    </form>
+
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button (click)="tryGoogleLogin()" color="primary">GOOGLE SIGN IN</button>
+    <button mat-raised-button (click)="goToRegister()" color="primary">Register</button>
+  </mat-card-actions>
+</mat-card>
