@@ -3,23 +3,46 @@
   </mat-toolbar>
   <mat-card class="my-card">
      <mat-card-content>
-        <form class="my-form">
+        <form class="my-form" #regisForm="ngForm"  >
             <mat-form-field class="full-width">
                 <mat-label>Name</mat-label>
-                <input  matInput  placeholder="Email" name="email">
-             </mat-form-field><br>
+                <input  matInput  placeholder="name" id="name" [(ngModel)]="nameValue" #name="ngModel" name="name" required >  
+             </mat-form-field>
+             <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+                  <div *ngIf="name.errors.required">
+                    Name is required.
+                  </div></div><br>
            <mat-form-field class="full-width">
               <mat-label>Email</mat-label>
-              <input  matInput  placeholder="Email" name="email">
-           </mat-form-field><br>
-           <mat-form-field class="full-width">
-              <mat-label>Password</mat-label>
-              <input  matInput  placeholder="Password" name="password">
-           </mat-form-field>
+              <input matInput placeholder="Email" id="email" #email="ngModel" [(ngModel)]="emailvalue" name="email" required
+          email>
+           </mat-form-field>     
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+               <div *ngIf="email.errors.required">
+                 Email is required.
+               </div>
+               <div *ngIf="email.errors.email && email.touched">
+                 Invalid Email
+               </div>
+             </div><br><br>
+             <mat-form-field class="full-width">
+                  <mat-label>Password</mat-label>
+                  <input matInput type="password" placeholder="Password" [(ngModel)]="passwordValue" #password="ngModel" name="password"
+                    required password  minlength="6">
+                </mat-form-field>
+                <div *ngIf="password.invalid && (email.dirty || password.touched)" class="alert alert-danger">
+                  <div *ngIf="password.errors.required">
+                    Password is required.
+                  </div>
+               
+                  <div *ngIf="password.errors.minlength">
+                        Password is wrong.
+                      </div>
+               </div><br>
         </form>
      </mat-card-content>
      <mat-card-actions>
-        <button mat-raised-button (click)="login()" color="primary">REGISTER</button>
+        <button mat-raised-button [disabled]="regisForm.invalid"  (click)="register()" color="primary">REGISTER</button>
         <button mat-raised-button (click)="goToLogin()" color="primary">LOGIN</button>
      </mat-card-actions>
   </mat-card>

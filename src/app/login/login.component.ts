@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthDetailsService} from './../auth-details.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -9,27 +10,42 @@ import {AuthDetailsService} from './../auth-details.service';
 })
 export class LoginComponent implements OnInit {
 
-  email:any;
-  password:any;
+  emailValue:any;
+  passwordValue:any;
 
-  constructor(private router: Router, public auth: AuthDetailsService) { }
+  constructor(private router: Router, public auth: AuthDetailsService,private toastr: ToastrService) { }
 
   ngOnInit() {
   }
 
   tryLogin(){
-    console.log(this.email,this.password);
+    this.auth.doLogin(this.emailValue, this.passwordValue).then(res => {
+      console.log('login has been successfull' , res);
+      this.auth.user = res.user;
+      this.auth.isLoggedIn = true;
+      this.toastr.success('Login successfull' , 'success');
+      this.router.navigate(['profile']);
+    },
+    err => {
+      console.log('error ocured whi normal login ' ,err);
+      this.toastr.error('Login Error Occurred', 'Login Error');
+    })
   }
 
 
   tryGoogleLogin(){
     this.auth.doGoogleLogin().then(res => {
+      console.log('login success' , res);
       this.auth.user = res.user;
       this.auth.isLoggedIn = true;
       this.router.navigate(['profile']);
     },
     err => {
       console.log('error ocured whi gooog ' ,err);
+      this.toastr.error('Login Error Occurred', 'Login Error', {
+        timeOut: 3000
+      });
+      
     })
   }
 

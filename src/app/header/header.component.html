@@ -19,7 +19,7 @@
       <span class="example-fill-remaining-space"></span>
 
       <!-- if the user is logged in -->
-      <div *ngIf="auth.user$ | async; then authenticated else login">
+      <div *ngIf="auth.isLoggedIn; then authenticated else login">
         <!-- template will replace this div -->
 
 
@@ -47,9 +47,9 @@
 </ng-template>
 
 <ng-template #authenticated>
-  <div *ngIf="auth.user$ | async as user">
+  <div *ngIf="auth.isLoggedIn">
     <!-- <p>UID: {{ user.uid }}</p> -->
     <span>{{this.auth.user.displayName}}</span> &nbsp;
-    <button  mat-raised-button  (click)="auth.signOut()"><span>LOGOUT</span></button>
+    <button  mat-raised-button  (click)="auth.doSignOut()"><span>LOGOUT</span></button>
   </div>
 </ng-template>

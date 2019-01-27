@@ -32,6 +32,8 @@ import { RegisterComponent } from './register/register.component';
 import {MatFormFieldModule , MatInputModule ,MatButtonModule } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 
+import { ToastrModule } from 'ngx-toastr';
+
 
 // list of urls for the routing module
 const appRoutes: Routes = [
@@ -82,6 +84,7 @@ const config = {
     AppRoutingModule,
     RouterModule .forRoot(appRoutes) ,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,

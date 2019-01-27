@@ -10,6 +10,7 @@ import { switchMap } from 'rxjs/operators';
 
 
 import * as firebase from 'firebase/app';
+import { StoreService } from './store.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +19,13 @@ export class AuthDetailsService {
 
   user$: Observable<User>;
   user: any;
-  isLoggedIn: boolean;
+  isLoggedIn: boolean = false;
 
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router
+    private router: Router,
+    public store: StoreService
   ) {
 
     this.user$ = this.afAuth.authState.pipe(
@@ -59,12 +61,16 @@ export class AuthDetailsService {
     })
   }
 
-  doRegister(email, password) {
+  doRegister(obj) {
     return new Promise<any>((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+      firebase.auth().createUserWithEmailAndPassword(obj.email, obj.password)
         .then(res => {
-          resolve(res);
-        }, err => reject(err))
+          obj.uid = res.user.uid;
+          this.updateUserData(obj)
+            console.log(res);
+            resolve(res);
+          // })
+        }, err => reject(err));
     })
   }
 
@@ -74,26 +80,32 @@ export class AuthDetailsService {
         .then(res => {
           resolve(res);
         },
-
           err => {
             reject(err);
+          }).catch(err => {
+            console.log(err);
+            this.store.showError("error" , "error");
           })
     })
   }
 
 
-  private updateUserData(user) {
+  private updateUserData(obj) {
     // Sets user data to firestore on login
-    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+    // console.log('updating user data');
+    // const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
 
-    const data = {
-      uid: user.uid,
-      email: user.email,
-      name: user.name, 
-      // photoURL: user.photoURL
-    }
+    // const data = {
+    //   uid: user.uid,
+    //   email: user.email,
+    //   displayName: user.displayName, 
+    //   // photoURL: user.photoURL
+    // }
 
-    return userRef.set(data, { merge: true })
+    // return userRef.set(data, { merge: true })
+
+    let o  = this.afs.collection<User>(`users/`);
+    o.add(obj);
 
   }
 
@@ -104,5 +116,19 @@ export class AuthDetailsService {
 
   goToLogin(){
     this.router.navigate(['login']);
+  }
+
+  doSignOut(){
+    firebase.auth().signOut().then(res => {
+      console.log(res);
+      this.isLoggedIn = false;
+      this.user = null;
+    
+      this.store.showsuccess('Logged out','Logged out');
+      this.goToLogin();
+    },
+    err => {
+      this.store.showError('error in loggin out' , 'error');
+    });
   }
 }
