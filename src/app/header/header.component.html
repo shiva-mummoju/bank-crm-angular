@@ -1,0 +1,29 @@
+<mat-sidenav-container class="example-container" *ngIf="shouldRun">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')" (closed)="events.push('close!')">
+    <mat-nav-list>
+      <a mat-list-item routerLink="transaction">Transactions</a>
+      <a mat-list-item routerLink="emi">EMI</a>
+      <a mat-list-item routerLink="profile">Profile</a>
+
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+
+    <mat-toolbar color="primary">
+      <mat-icon mat-button (click)="sidenav.toggle()" style="cursor: pointer">menu</mat-icon>
+      <span> &nbsp; Bank Application</span>
+
+      <!-- This fills the remaining space of the current row -->
+      <span class="example-fill-remaining-space"></span>
+
+      <span>Login</span>
+    </mat-toolbar>
+
+
+
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
